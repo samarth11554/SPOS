@@ -1,0 +1,192 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+// Java implementation of First-Fit algorithm
+class FirstFit {
+    void firstFit(int blockSize[], int m, int processSize[], int n) {
+        int allocation[] = new int[n];
+        Arrays.fill(allocation, -1);
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (blockSize[j] >= processSize[i]) {
+                    allocation[i] = j;
+                    blockSize[j] -= processSize[i];
+                    break;
+                }
+            }
+        }
+
+        System.out.println("\nProcess No.\tProcess Size\tBlock no.");
+        for (int i = 0; i < n; i++) {
+            System.out.print((i + 1) + "\t\t" + processSize[i] + "\t\t");
+            if (allocation[i] != -1) {
+                System.out.print(allocation[i] + 1);
+            } else {
+                System.out.print("Not Allocated");
+            }
+            System.out.println();
+        }
+    }
+}
+
+class NextFit {
+    void nextFit(int blockSize[], int m, int processSize[], int n) {
+        int allocation[] = new int[n];
+        Arrays.fill(allocation, -1);
+        int j = 0;
+
+        for (int i = 0; i < n; i++) {
+            int count = 0;
+            while (count < m) {
+                if (blockSize[j] >= processSize[i]) {
+                    allocation[i] = j;
+                    blockSize[j] -= processSize[i];
+                    break;
+                }
+                j = (j + 1) % m;
+                count++;
+            }
+        }
+
+        System.out.println("\nProcess No.\tProcess Size\tBlock no.");
+        for (int i = 0; i < n; i++) {
+            System.out.print((i + 1) + "\t\t" + processSize[i] + "\t\t");
+            if (allocation[i] != -1) {
+                System.out.print(allocation[i] + 1);
+            } else {
+                System.out.print("Not Allocated");
+            }
+            System.out.println();
+        }
+    }
+}
+
+class WorstFit {
+    void worstFit(int blockSize[], int m, int processSize[], int n) {
+        int allocation[] = new int[n];
+        Arrays.fill(allocation, -1);
+
+        for (int i = 0; i < n; i++) {
+            int wstIdx = -1;
+            for (int j = 0; j < m; j++) {
+                if (blockSize[j] >= processSize[i]) {
+                    if (wstIdx == -1 || blockSize[wstIdx] < blockSize[j]) {
+                        wstIdx = j;
+                    }
+                }
+            }
+            if (wstIdx != -1) {
+                allocation[i] = wstIdx;
+                blockSize[wstIdx] -= processSize[i];
+            }
+        }
+
+        System.out.println("\nProcess No.\tProcess Size\tBlock no.");
+        for (int i = 0; i < n; i++) {
+            System.out.print((i + 1) + "\t\t" + processSize[i] + "\t\t");
+            if (allocation[i] != -1) {
+                System.out.print(allocation[i] + 1);
+            } else {
+                System.out.print("Not Allocated");
+            }
+            System.out.println();
+        }
+    }
+}
+
+class BestFit {
+    void bestFit(int blockSize[], int m, int processSize[], int n) {
+        int allocation[] = new int[n];
+        Arrays.fill(allocation, -1);
+
+        for (int i = 0; i < n; i++) {
+            int bestIdx = -1;
+            for (int j = 0; j < m; j++) {
+                if (blockSize[j] >= processSize[i]) {
+                    if (bestIdx == -1 || blockSize[bestIdx] > blockSize[j]) {
+                        bestIdx = j;
+                    }
+                }
+            }
+            if (bestIdx != -1) {
+                allocation[i] = bestIdx;
+                blockSize[bestIdx] -= processSize[i];
+            }
+        }
+
+        System.out.println("\nProcess No.\tProcess Size\tBlock no.");
+        for (int i = 0; i < n; i++) {
+            System.out.print((i + 1) + "\t\t" + processSize[i] + "\t\t");
+            if (allocation[i] != -1) {
+                System.out.print(allocation[i] + 1);
+            } else {
+                System.out.print("Not Allocated");
+            }
+            System.out.println();
+        }
+    }
+}
+
+// Driver Code for All Algorithms
+public class Main {
+    public static void main(String[] args) {
+        FirstFit first = new FirstFit();
+        NextFit next = new NextFit();
+        WorstFit worst = new WorstFit();
+        BestFit best = new BestFit();
+        Scanner scan = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("\nEnter the number of Blocks: ");
+            int m = scan.nextInt();
+            System.out.println("Enter the number of Processes: ");
+            int n = scan.nextInt();
+            int blockSize[] = new int[m];
+            int processSize[] = new int[n];
+
+            System.out.println("Enter the Size of all the blocks: ");
+            for (int i = 0; i < m; i++) {
+                blockSize[i] = scan.nextInt();
+            }
+            System.out.println("Enter the size of all processes: ");
+            for (int i = 0; i < n; i++) {
+                processSize[i] = scan.nextInt();
+            }
+
+            System.out.println("\nMenu");
+            System.out.println("1. First Fit ");
+            System.out.println("2. Next Fit");
+            System.out.println("3. Worst Fit");
+            System.out.println("4. Best Fit");
+            System.out.println("5. Exit");
+            System.out.println("Select the algorithm you want to implement: ");
+            int choice = scan.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.println("First Fit Output");
+                    first.firstFit(blockSize, m, processSize, n);
+                    break;
+                case 2:
+                    System.out.println("Next Fit Output");
+                    next.nextFit(blockSize, m, processSize, n);
+                    break;
+                case 3:
+                    System.out.println("Worst Fit Output");
+                    worst.worstFit(blockSize, m, processSize, n);
+                    break;
+                case 4:
+                    System.out.println("Best Fit Output");
+                    best.bestFit(blockSize, m, processSize, n);
+                    break;
+                case 5:
+                    System.out.println("Exiting the code...");
+                    scan.close();
+                    return;
+                default:
+                    System.out.println("Invalid option");
+            }
+        }
+    }
+}
